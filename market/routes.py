@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash
-from flask_login import login_user
+from flask_login import login_user, logout_user, login_required
 from market import app, db
 from market.models import Item, User
 from market.forms import RegisterForm, LoginForm
@@ -10,6 +10,7 @@ def home_page():
   return render_template('home.html')
 
 @app.route('/market')
+@login_required
 def market_page():
   items = Item.query.all()
   return render_template('market.html', items=items)
@@ -25,6 +26,10 @@ def register_page():
     )
     db.session.add(user_to_create)
     db.session.commit()
+
+    login_user(user_to_create)
+    flash(f'Account created successfuly, logged in as {user_to_create.username}', category='success')
+      
     return redirect(url_for('market_page'))
   if form.errors != {}:
     for err_msg in form.errors.values():
@@ -44,3 +49,9 @@ def login_page():
       flash('Invalid credentials', category='danger')
 
   return render_template('login.html', form=form)
+
+@app.route('/logout')
+def logout_page():
+  logout_user()
+  flash('Logged out successfully', category='info')
+  return redirect(url_for('home_page'))

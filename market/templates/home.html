@@ -1,8 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}
-  Home Page
+  Flask Market
 {% endblock %}
 
 {% block content %}
-  <h1>ZVZXCVZXCV</h1>
+  <h1>Welcome to the market</h1>
+  <div>
+    Click th button below to start purchasing products
+  </div>
+  <a 
+    class="btn btn-primary"
+    href="{{ url_for('market_page') }}"
+  >
+    Start
+  </a>
 {% endblock %}
